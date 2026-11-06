@@ -1,5 +1,13 @@
 # Verification record — 2026-11-06
 
+## Publication follow-up
+
+The independently reviewed source was published at tag `v0.1.0` (commit `a0e8d08230df4e437eba089e5d9152be0d46bb92`). A fresh external consumer fetched that exact tag using `GOPROXY=direct go get github.com/3inch-ai/system1go@v0.1.0`, then compiled and ran successfully: `published module: encoded 142 bytes, no inference`. Module checksum: `h1:1l2NTx+fUb1NargumPIfdkvDY7WctVw7Kscec7KxL+U=`.
+
+The first hosted run passed race tests and vet on all nine OS/Go combinations, but its Windows coverage command failed because PowerShell split the unquoted `-coverprofile=coverage.out` argument. Commit `24e83eebaf6324a8edb0a371bf01572107a87c61` quotes the argument. This is a CI-shell-only correction; released library source is unchanged. Hosted rerun status is available in [Actions](https://github.com/3inch-ai/system1go/actions).
+
+The sections below retain the pre-publication local verification record.
+
 Implementation tested on macOS arm64. No inference credentials read; no paid/provider inference, local model operations, Git commits, push or publication. Synthetic HTTP is clearly labeled and distinct from a model. [Live boundary](LIVE-LOCAL.md).
 
 ## Executed gates

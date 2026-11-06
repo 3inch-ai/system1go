@@ -1,0 +1,14 @@
+# Competitor research — 2026-11-06 (before implementation)
+
+Source inspection, not benchmarks or provider inference. Fair scope comparison:
+
+* [Official openai-go/v3 decision.go](https://github.com/openai/openai-go/blob/5d4ac5248c9446ff18a9654239306ef49d51e454/decision.go) **does implement Decisions**, typed boolean/string unions, refusal variants, cache controls and RawJSON. Prefer it for full OpenAI APIs and rich content. It is not a native System One adapter: service.New posts to `decisions`. Cross-provider native maps/noul/state require application conversion. system1go regression: TestNativePredicate, TestTypedChoice, TestScore, TestOptions.
+* [sashabaranov/go-openai client.go](https://github.com/sashabaranov/go-openai/blob/dd54fd29688ae9934688a2928be0abbd8647a812/client.go), inspected root tree at that same SHA: no Decisions-specific file/service was present. This is a scope gap, not a bug in supported APIs. handleErrorResp uses unbounded io.ReadAll and returned upstream errors; system1go instead bounds response bytes and does not render upstream bodies in errors. Regression: TestTransportSafety. It already supports context and injectable HTTPClient; these are not novel advantages.
+* TypeSafe [official docs index](https://docs.typesafe.ai/llms.txt) and GitHub org repositories list Python and JS SDKs, no Go SDK discovered. This is a dated search result, not proof no Go package exists anywhere. Native Go integration without another language/runtime is our gap target. Official SDK source is not claimed absent beyond this search.
+* [LiteLLM Decisions](https://docs.litellm.ai/docs/decisions) supports BOTH routes and many more providers/features, including images/box, routing and proxy operation. Python SDK or managed proxy is an additional deployment/runtime for a direct Go consumer. system1go deliberately does not replace these features. No historical transformation bug is claimed without revalidating current source.
+
+## Checked official contracts
+
+[System One OpenAPI](https://docs.typesafe.ai/api/system-one.md): map questions/state, noul, 1–255 string choices, 1–10 score criteria, structured content, no refusal variant. [OpenAI create](https://developers.openai.com/api/reference/resources/decisions/methods/create): ordered 1–400 questions, 2–255 typed choices, 2–10 levels, explicit refusal, input_json object/object-array, cache/safety controls. [Guide](https://developers.openai.com/api/docs/guides/decisions) documents Go examples. No paid calls made.
+
+Our improvement is narrower, explicit cross-protocol semantics with preflight rejection rather than silently renamed boolean choices, discarded criteria/options, manufactured refusal, confidence/score rewriting, or invented absent usage. These are acceptance requirements, **not allegations of competitor defects**. Tests named above plus TestInvalidAnswers and TestValidation are executable mapping. Neither latency, accuracy nor memory superiority has been measured.

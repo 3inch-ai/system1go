@@ -6,7 +6,7 @@ A small, dependency-free Go client for **native System One** and **OpenAI Decisi
 
 ## Install
 
-Go 1.25 or later. Once the reviewed v0.1.0 tag is published:
+Go 1.25 or later. The reviewed v0.1.0 release is published:
 
 ```sh
 go get github.com/3inch-ai/system1go@v0.1.0
